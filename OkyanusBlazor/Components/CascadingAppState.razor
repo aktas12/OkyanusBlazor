@@ -1,0 +1,39 @@
+﻿<CascadingValue Value="this">
+    @ChildContent
+</CascadingValue>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    /// <summary>
+    /// Implement property handlers like so
+    /// </summary>
+    private string message = "";
+    public string Message
+    {
+        get => message;
+        set
+        {
+            message = value;
+            StateHasChanged();  // Optionally force a re-render
+        }
+    }
+
+    private int count = 0;
+    public int Count
+    {
+        get => count;
+        set
+        {
+            count = value;
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        Message = "Initial Message";
+    }
+}

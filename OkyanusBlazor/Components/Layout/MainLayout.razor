@@ -1,0 +1,270 @@
+﻿@using Container.Components.Models
+@using OkyanusBlazor.Components.Pages
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@inject IHttpContextAccessor HttpContextAccessor
+
+<div class="w-100 h-100">
+    <DxGridLayout CssClass="w-100 ch-480">
+        <Rows>
+            <DxGridLayoutRow Height="50px" />
+            @* <DxGridLayoutRow Height="48px" /> *@
+            <DxGridLayoutRow />
+            <DxGridLayoutRow Height="30px" />
+        </Rows>
+        <Columns>
+            <DxGridLayoutColumn Width="@(isLeftPanelCollapsed ? "0" : "250px")" />
+            <DxGridLayoutColumn />
+        </Columns>
+        <Items>
+            <DxGridLayoutItem Row="0" Column="0" ColumnSpan="2">
+                <Template>
+                    <div class="gridlayout-header gridlayout-item m-0 p-0">
+                        <Header OnMenuClick="ToggleLeftPanel"></Header>
+                    </div>
+                </Template>
+            </DxGridLayoutItem>
+
+            @* <DxGridLayoutItem Row="1" Column="0">
+                <Template>
+                    <div class="ikinciSatir gridlayout-item">
+                        Search
+                    </div>
+                </Template>
+            </DxGridLayoutItem> *@
+
+            @* <DxGridLayoutItem Row="1" Column="1">
+                <Template>
+
+                    <Toolbar />
+                    <div class="tabs-area gridlayout-item">
+                        <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex" @ref="tabs"
+                        AllowTabReorder="true" RenderMode="TabsRenderMode.AllTabs" TabClosing="TabClosing">
+                            @foreach (var tab in tabPages)
+                            {
+                                <DxTabPage Text="@tab.Text" Id="@tab.Id" Click="OnTabClick" TabIconCssClass="oi oi-info" AllowClose="true">
+
+
+                                </DxTabPage>
+                            }
+                        </DxTabs>
+                    </div> 
+                </Template>
+            </DxGridLayoutItem>*@
+
+            <DxGridLayoutItem Row="1" Column="0">
+                <Template>
+                    <div class="gridlayout-left-side-bar gridlayout-item left-panel d-block @(isLeftPanelCollapsed ? "collapsed" : "")">
+                        <div class="my-2">
+
+                            <DxTreeView @ref="@treeView" ShowFilterPanel="true" AllowSelectNodes="true"
+                            SelectionChanged="@SelectionChanged"
+                            AnimationType="LayoutAnimationType.Slide">
+                                <Nodes>
+                                    <DxTreeViewNode Text="Metals" Expanded="true" BadgeText="Yeni" IconCssClass="oi oi-home" style="background-color: lightgray; font-weight:600" CssClass="@(HasChildren("Metals") ? "treeview-node-with-children" : "")">
+                                        <Nodes>
+                                            <DxTreeViewNode Text="Home" Click="@((e) => OpenTab(e, "Home", typeof(Home)))" />
+                                            <DxTreeViewNode Text="Task Assignment" Click="@((e) => OpenTab(e, "Task Assignment",  typeof(TaskAssignment)))" />
+
+                                            <DxTreeViewNode Text="Other" Expanded="true" IconCssClass="oi oi-droplet" style="background-color: lightgray; font-weight:600" CssClass="@(HasChildren("Inner transition elements") ? "treeview-node-with-children" : "")">
+                                                <Nodes>
+                                                    <DxTreeViewNode Text="Project Assignment" Click="@((e) => OpenTab(e, "Project Assignment", typeof(ProjectAssignment)))" />
+
+                                                    <DxTreeViewNode Text="Finding Assignment" Click="@((e) => OpenTab(e, "Finding Assignment", typeof(FindingAssignment)))" />
+
+                                                </Nodes>
+                                            </DxTreeViewNode>
+                                            <DxTreeViewNode Text="Personnel List" Click="@((e) => OpenTab(e, "Personnel List", typeof(PersonnelList)))" />
+
+                                            <DxTreeViewNode Text="Users" Click="@((e) => OpenTab(e, "Users", typeof(Users)))" />
+
+                                        </Nodes>
+                                    </DxTreeViewNode>
+                                    <DxTreeViewNode Text="Reporting Area" Expanded="true" Click="@((e) => OpenTab(e, "Reporting", typeof(Reporting)))" />
+                                </Nodes>
+                            </DxTreeView>
+
+                        </div>
+
+                        <br />
+                        <p>ActiveTabIndex: @ActiveTabIndex</p>
+                    </div>
+                </Template>
+            </DxGridLayoutItem>
+
+            <DxGridLayoutItem Row="1" Column="1">
+                <Template>
+                    <div class="tabs-area gridlayout-item">
+                        <DxTabs @bind-ActiveTabIndex="@ActiveTabIndex" @ref="tabs"
+                        AllowTabReorder="false" RenderMode="TabsRenderMode.AllTabs" TabClosing="TabClosing">
+                            @foreach (var tab in tabPages)
+                            {
+                                <DxTabPage Text="@tab.Text" Id="@tab.Id" Click="OnTabClick" TabIconCssClass="oi oi-info" AllowClose="true">
+                                    <div class="gridlayout-content gridlayout-item main-content @(isLeftPanelCollapsed ? "collapsed" : "")">
+                                        @if (tabPages != null && tabPages.Count > 0)
+                                        {
+                                            @tabPages[ActiveTabIndex].ChildContent
+                                        }
+                                       
+                                    </div>
+
+                                </DxTabPage>
+                            }
+                        </DxTabs>
+                    </div>
+
+
+                </Template>
+            </DxGridLayoutItem>
+
+            <DxGridLayoutItem Row="3" Column="0" ColumnSpan="2">
+                <Template>
+                    <div class="gridlayout-footer gridlayout-item">
+                        Footer
+                    </div>
+                </Template>
+            </DxGridLayoutItem>
+        </Items>
+    </DxGridLayout>
+</div>
+
+@code {
+    private DxTabs tabs;
+    DxTreeView treeView;
+
+    private bool isLeftPanelCollapsed = false;
+    int ActiveTabIndex { get; set; } = 0;
+    private List<DxTabPage> tabPages = new (){
+        new DxTabPage()
+        {
+            AllowClose = false,
+            Text = "Home",
+            Id = "tab-1",
+            ChildContent = builder =>
+            {
+                builder.OpenComponent(0, typeof(Home));
+                builder.CloseComponent();
+            }
+        }
+    };
+
+    private void ToggleLeftPanel()
+    {
+        isLeftPanelCollapsed = !isLeftPanelCollapsed;
+        StateHasChanged(); // Ensure UI updates
+    }
+
+    private void OpenTab(TreeViewNodeClickEventArgs args, string tabCaption, Type componentType)
+    {
+        var existingTab = tabPages.FirstOrDefault(t => t.Text == tabCaption);
+        if (existingTab != null)
+        {
+            ActiveTabIndex = tabPages.IndexOf(existingTab);
+        }
+        else
+        {
+            var newTab = new DxTabPage()
+                {
+                    AllowClose = true,
+                    Text = tabCaption,
+                    Id = $"tab-{tabPages.Count + 1}",
+                    ChildContent = builder =>
+            {
+                builder.OpenComponent(0, componentType);
+                builder.CloseComponent();
+            }
+                };
+
+            // if (tabCaption == "Home")
+            // {
+
+            // }
+
+
+
+            tabPages.Add(newTab);
+            ActiveTabIndex = tabPages.Count - 1;
+        }
+
+        StateHasChanged(); // Ensure UI updates
+    }
+
+    void TabClosing(TabCloseEventArgs e)
+    {
+        e.Cancel = true;
+
+        if (e.TabInfo == null) return;
+
+        var tabIndex = tabPages.FindIndex(t => t.Text == e.TabInfo.Text);
+        if (tabIndex != -1)
+        {
+            tabPages.RemoveAt(tabIndex);
+
+            // Adjust ActiveTabIndex
+            if (tabPages.Count > 0)
+            {
+                if (tabIndex <= ActiveTabIndex)
+                {
+                    ActiveTabIndex = Math.Max(0, Math.Min(ActiveTabIndex - 1, tabPages.Count - 1));
+                }
+            }
+            else
+            {
+                ActiveTabIndex = -1;
+            }
+            StateHasChanged(); // Ensure UI updates
+        }
+
+    }
+
+    private void OnTabClick(TabClickEventArgs e)
+    {
+        if (e.TabIndex >= 0 && e.TabIndex < tabPages.Count)
+        {
+            ActiveTabIndex = e.TabIndex;
+            StateHasChanged(); // Ensure UI updates
+        }
+    }
+
+    [SupplyParameterFromQuery(Name = UrlGenerator.ToggleSidebarName)]
+    public bool ToggledSidebar { get; set; }
+
+    private string windowsUserName = "";
+
+    protected override void OnInitialized()
+    {
+        windowsUserName = HttpContextAccessor.HttpContext?.User?.Identity?.Name
+                      ?? System.Security.Principal.WindowsIdentity.GetCurrent()?.Name
+                      ?? "No User";
+
+        base.OnInitialized();
+    }
+
+    // private class TabItem
+    // {
+    //     public int TabId { get; set; }
+    //     public string Title { get; set; }
+    //     public DynamicComponent Content { get; set; }
+    // }
+
+    void SelectionChanged(TreeViewNodeEventArgs e)
+    {
+        if (e is null)
+        {
+            return;
+        }
+    }
+
+    private bool HasChildren(string nodeText)
+    {
+        // Implement logic to determine if the node has children based on its text
+        // This is a placeholder implementation
+        return nodeText switch
+        {
+            "Metals" => true,
+            "Inner transition elements" => true,
+            "Nonmetals" => true,
+            _ => false,
+        };
+    }
+}

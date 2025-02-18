@@ -1,0 +1,29 @@
+﻿<style>
+
+    .bg {
+        background-color: khaki;
+    }
+</style>
+
+<div class="bg">
+    <h3>Task Assignment Page</h3>
+    <br />
+
+
+    <label for="tbClearButton" class="demo-text cw-320 mb-1">
+        Memleket
+    </label>
+    <DxTextBox @bind-Text="@TextValue"
+               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+               BindValueMode="BindValueMode.OnInput"
+               NullText="Enter username"
+               CssClass="cw-320"
+               InputId="tbClearButton" />
+
+</div>
+
+
+
+@code {
+    string TextValue { get; set; } = "Ankara";
+}

@@ -1,0 +1,9 @@
+﻿﻿<div style="height:42px;">
+    <span style="font-size:x-large">@AppState.Message</span>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    public CascadingAppState AppState { get; set; }
+}

@@ -1,0 +1,133 @@
+﻿<style>
+ 
+    .menu-icon {
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .search-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+     }
+
+    .tepeMenu {
+        display: flex;
+        width: 100%;
+        background: radial-gradient(ellipse at bottom, dodgerblue 0%, white 100%);
+        /* background-image: linear-gradient(to top, #accbee 0%, #e7f0fd 100%); */
+    }
+
+    .part {
+        height: 100%;        
+        /* border: 1px solid #ccc; */
+        display: flex;
+        align-items: center;
+    }
+
+    /* Belirtilen genişlikler */
+    .part-1 {
+        width: 60px;
+    }
+
+    .part-2 {
+        width: 60px;
+    }
+
+    .part-3 {
+        width: 180px;
+    }
+
+    .part-4 {
+        flex-grow: 1;
+        height: 100%;
+        /* background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%); */
+        /* background: radial-gradient(ellipse at bottom, dodgerblue 0%, white 100%); */
+        overflow: hidden;
+    }
+    .part-5 {
+        width: 250px;
+    }
+
+    .part-6 {
+        width: 60px;
+    }
+    
+</style>
+
+<div class="tepeMenu">
+
+    <div class="part part-1">
+        <div class="col-auto menu-icon">
+            <DxButton CssClass="oi oi-menu" RenderStyleMode="ButtonRenderStyleMode.Outline" Click="OnMenuClickHandler"></DxButton>
+        </div>
+    </div>
+
+    <div class="part part-2">
+        <div class="logo">
+            <i class="oi oi-globe"></i>
+        </div>
+    </div>
+
+    <div class="part part-3">Okyanus WEB</div>
+
+    <div class="part part-4">
+     <div class="col search-container">
+              @*  <div class="input-group search-bar">
+                <input type="text" class="form-control" placeholder="Ara...">
+                <button class="btn btn-outline-secondary">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div> *@
+
+            <div id='stars'></div>
+<div id='stars2'></div>
+<div id='stars3'></div>
+<div id='title'>
+  <span>
+    OKYANUS WEB
+  </span>
+</div>
+
+
+        </div>
+    </div>
+
+
+    <div class="part part-5">User Info</div>
+    <div class="part part-6"><i class="oi oi-target"></i></div>
+</div>
+
+
+
+
+@code {
+    [Parameter]
+    public EventCallback OnMenuClick { get; set; }
+    private bool isCollapsed = false;
+
+    private async Task OnMenuClickHandler()
+    {
+        // if (OnMenuClick.HasDelegate)
+        // {
+        //     await OnMenuClick.InvokeAsync(null);
+        // }
+
+        isCollapsed = !isCollapsed;
+        // var leftPanel = document.querySelector(".left-panel");
+        // if (leftPanel != null)
+        // {
+        //     leftPanel.classList.toggle("collapsed", isCollapsed);
+        // }
+
+        if (OnMenuClick.HasDelegate)
+        {
+            await OnMenuClick.InvokeAsync(null);
+        }
+    }
+
+}
+ 

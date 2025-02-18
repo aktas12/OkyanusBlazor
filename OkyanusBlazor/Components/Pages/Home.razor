@@ -1,0 +1,40 @@
+﻿@using OkyanusBlazor.DbConnection
+@using System.Data
+@* @using System.ComponentModel.DataAnnotations
+@inject IDataAccess _db
+ *@
+
+
+<style>
+
+    .bg {
+        background-color: peachpuff;
+    }
+</style>
+
+<div class ="bg">
+    <h3>HOME PAGE </h3>
+
+    <Lorem></Lorem>
+</div>
+
+
+@code {
+    // IEnumerable<MaddeAnaKategori>? MaddeAnaBasliklar { get; set; }
+    // MaddeAnaKategori? seciliAnaKategori { get; set; }
+
+    // private override void OnInitialized()
+    // {
+        // var ana = "SELECT * FROM [dbo].[MaddeAnaBaslik] WITH (NOLOCK) order by Sira";
+        // MaddeAnaBasliklar = await _db.GetAllData<MaddeAnaKategori, dynamic>(ana, new { }, CommandType.Text);
+        // base.OnInitialized();
+
+    // }
+
+    // public class MaddeAnaKategori
+    // {
+    //     [Key]
+    //     public int ID { get; set; }
+    //     public string? KategoriAdi { get; set; }
+    // }
+}
